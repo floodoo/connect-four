@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:four_wins/enums/game_board_field.enum.dart';
 import 'package:four_wins/models/game_board_field.model.dart';
-import 'package:logging/logging.dart';
+import 'package:four_wins/utils/logger.util.dart';
 
 final gameBoardControllerProvider = StateNotifierProvider.autoDispose<PlaceController, List<GameBoardFieldModel>>(
   (ref) {
@@ -14,9 +14,10 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
     buildGameBoard();
   }
 
-  final Logger _log = Logger('game_board.controller.dart');
+  static final _log = LoggerUtil(name: "game_board.controller.dart").logger;
 
   void buildGameBoard() async {
+    _log.info('Building game board');
     final gameBoardFields = List<GameBoardFieldModel>.generate(
       42,
       (index) => GameBoardFieldModel(
@@ -49,5 +50,45 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
       }
       return gameBoardField;
     }).toList();
+
+    checkIfSomebodyWon(index: bottomFieldIndex);
+  }
+
+  bool checkIfSomebodyWon({required int index}) {
+    _log.info('Checking if somebody won');
+    bool somebodyWon = true;
+
+    // check if somebody won on the right side
+    if (index % 7 <= 3) {
+      _log.fine("Checking if somebody won on the right side");
+      for (int i = index; i <= index + 3 && i <= state.length - 1; i++) {
+        if (state[i].status != Status.filled) {
+          somebodyWon = false;
+        }
+      }
+
+      if (somebodyWon) {
+        _log.info('Somebody won');
+        return true;
+      }
+    }
+
+    // check if somebody won on the left side
+    if (index % 7 >= 3) {
+      _log.fine("Checking if somebody won on the left side");
+      somebodyWon = true;
+      for (int i = index; i >= index - 3 && i >= 0; i--) {
+        if (state[i].status != Status.filled) {
+          somebodyWon = false;
+        }
+      }
+
+      if (somebodyWon) {
+        _log.info('Somebody won');
+        return true;
+      }
+    }
+
+    return somebodyWon;
   }
 }

@@ -10,7 +10,6 @@ class GameBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _log.info('Building game board');
     final gameBoard = ref.watch(gameBoardControllerProvider);
 
     return Scaffold(

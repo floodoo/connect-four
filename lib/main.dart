@@ -1,24 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:four_wins/app.dart';
-import 'package:logging/logging.dart';
+import 'package:four_wins/utils/logger.util.dart';
 
 void main() {
-  if (kReleaseMode) {
-    Logger.root.level = Level.WARNING;
-  }
-
-  Logger.root.onRecord.listen((record) {
-    debugPrint(
-      '${record.level.name}: ${record.time}: '
-      '${record.loggerName}: '
-      '${record.message}',
-    );
-  });
-
-  final log = Logger('main.dart');
+  final log = LoggerUtil(name: 'main.dart').logger;
 
   WidgetsFlutterBinding.ensureInitialized();
 
