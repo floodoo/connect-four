@@ -60,7 +60,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
         return field;
       }).toList());
 
-      await Future.delayed(const Duration(milliseconds: 250));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       // remove coin if it is not at the bottom field
       if (i != bottomFieldIndex) {
