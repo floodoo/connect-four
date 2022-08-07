@@ -19,6 +19,7 @@ class AudioController extends ChangeNotifier {
 
     _musicPlayer.onPlayerComplete.listen((event) {
       _log.info('Song finished');
+      _musicPlayer.stop();
       playMusic();
     });
   }

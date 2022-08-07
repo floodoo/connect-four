@@ -60,7 +60,7 @@ class GameBoard extends ConsumerWidget {
                     : ref.read(gameBoardControllerProvider.notifier).setCoinOnGameField(index: index),
                 style: ElevatedButton.styleFrom(
                   primary: gameBoardField.status == Status.empty
-                      ? Colors.grey
+                      ? Colors.white60
                       : gameBoardField.player == Player.player1
                           ? Colors.blue
                           : Colors.red,
