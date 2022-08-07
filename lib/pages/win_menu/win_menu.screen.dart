@@ -27,7 +27,7 @@ class WinMenuScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 200),
-              Text("You made $gameMoves moves", style: theme.textTheme.headline5),
+              Text("You needed $gameMoves moves", style: theme.textTheme.headline5),
               const SizedBox(height: 20),
               TextButton.icon(
                 onPressed: () => GoRouter.of(context).go('/'),
