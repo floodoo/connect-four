@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:four_wins/core/ui/theme/four_wins.theme.dart';
-import 'package:four_wins/features/game_board/game_board.screen.dart';
-import 'package:four_wins/features/main_menu/main_menu.screen.dart';
+import 'package:four_wins/pages/game_board/game_board.screen.dart';
+import 'package:four_wins/pages/main_menu/main_menu.screen.dart';
+import 'package:four_wins/theme/four_wins.theme.dart';
 import 'package:go_router/go_router.dart';
 
 class MyApp extends StatelessWidget {

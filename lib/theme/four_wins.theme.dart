@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:four_wins/core/utils/color.util.dart';
+import 'package:four_wins/utils/color.util.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FourWinsTheme {
@@ -27,7 +27,11 @@ class FourWinsTheme {
       primaryColor: color,
       splashColor: isAndroid ? theme.splashColor : Colors.transparent,
       highlightColor: isAndroid ? theme.highlightColor : Colors.transparent,
-      appBarTheme: theme.appBarTheme.copyWith(backgroundColor: Colors.transparent),
+      appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: isLight ? Colors.black : Colors.white),
+      ),
       fontFamily: GoogleFonts.poppins().fontFamily,
       textTheme: theme.textTheme.copyWith(
         headline1: theme.textTheme.headline1?.copyWith(
