@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:connect_four/utils/color.util.dart';
 import 'package:flutter/material.dart';
-import 'package:four_wins/utils/color.util.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FourWinsTheme {
+class ConnectFourTheme {
   static ThemeData get light {
     return _getTheme(ColorUtil.primaryColor, isAndroid: Platform.isAndroid);
   }

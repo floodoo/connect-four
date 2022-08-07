@@ -1,7 +1,7 @@
+import 'package:connect_four/pages/game_board/game_board.screen.dart';
+import 'package:connect_four/pages/main_menu/main_menu.screen.dart';
+import 'package:connect_four/theme/connect_four.theme.dart';
 import 'package:flutter/material.dart';
-import 'package:four_wins/pages/game_board/game_board.screen.dart';
-import 'package:four_wins/pages/main_menu/main_menu.screen.dart';
-import 'package:four_wins/theme/four_wins.theme.dart';
 import 'package:go_router/go_router.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
       routeInformationProvider: _router.routeInformationProvider,
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
-      title: '4 Wins',
-      theme: FourWinsTheme.light,
-      darkTheme: FourWinsTheme.dark,
+      title: 'Connect Four',
+      theme: ConnectFourTheme.light,
+      darkTheme: ConnectFourTheme.dark,
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
     );

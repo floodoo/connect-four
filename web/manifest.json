@@ -1,6 +1,6 @@
 {
-    "name": "four_wins",
-    "short_name": "four_wins",
+    "name": "connect_four",
+    "short_name": "connect_four",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

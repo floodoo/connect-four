@@ -17,7 +17,7 @@ class MainMenuScreen extends StatelessWidget {
             Transform.rotate(
               angle: -0.1,
               child: Text(
-                '4 Wins',
+                'Connect Four',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headline1,
               ),

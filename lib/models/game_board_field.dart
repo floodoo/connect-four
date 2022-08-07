@@ -1,5 +1,5 @@
-import 'package:four_wins/enums/game_board_field.enum.dart';
-import 'package:four_wins/enums/player.enum.dart';
+import 'package:connect_four/enums/game_board_field.enum.dart';
+import 'package:connect_four/enums/player.enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'game_board_field.freezed.dart';

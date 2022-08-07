@@ -1,8 +1,8 @@
+import 'package:connect_four/app.dart';
+import 'package:connect_four/utils/logger.util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:four_wins/app.dart';
-import 'package:four_wins/utils/logger.util.dart';
 
 void main() {
   final log = LoggerUtil(name: 'main.dart').logger;

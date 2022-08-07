@@ -1,9 +1,9 @@
+import 'package:connect_four/enums/game_board_field.enum.dart';
+import 'package:connect_four/enums/player.enum.dart';
+import 'package:connect_four/models/game_board_field.dart';
+import 'package:connect_four/pages/game_board/game_board.state.dart';
+import 'package:connect_four/utils/logger.util.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:four_wins/enums/game_board_field.enum.dart';
-import 'package:four_wins/enums/player.enum.dart';
-import 'package:four_wins/models/game_board_field.dart';
-import 'package:four_wins/pages/game_board/game_board.state.dart';
-import 'package:four_wins/utils/logger.util.dart';
 
 final gameBoardControllerProvider = StateNotifierProvider.autoDispose<GameBoardController, GameBoardState>(
   (ref) {

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.four_wins">
+    package="de.florian.schmitz.connect_four">
    <application
-        android:label="four_wins"
+        android:label="Connect Four"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

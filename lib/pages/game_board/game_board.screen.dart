@@ -1,8 +1,8 @@
+import 'package:connect_four/enums/game_board_field.enum.dart';
+import 'package:connect_four/enums/player.enum.dart';
+import 'package:connect_four/pages/game_board/game_board.controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:four_wins/enums/game_board_field.enum.dart';
-import 'package:four_wins/enums/player.enum.dart';
-import 'package:four_wins/pages/game_board/game_board.controller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 
