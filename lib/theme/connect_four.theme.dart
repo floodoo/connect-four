@@ -31,6 +31,11 @@ class ConnectFourTheme {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: isLight ? Colors.black : Colors.white),
+        titleTextStyle: GoogleFonts.nothingYouCouldDo(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: isLight ? Colors.black : Colors.white,
+        ),
       ),
       fontFamily: GoogleFonts.poppins().fontFamily,
       textTheme: theme.textTheme.copyWith(

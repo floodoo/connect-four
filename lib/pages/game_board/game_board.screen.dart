@@ -12,8 +12,8 @@ class GameBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final gameBoardFieldList = ref.watch(gameBoardControllerProvider).gameBoardFieldList;
-
     final won = ref.watch(gameBoardControllerProvider).won;
 
     if (won) {
@@ -34,35 +34,45 @@ class GameBoard extends ConsumerWidget {
           ),
         ],
       ),
-      body: GridView.builder(
-        itemCount: gameBoardFieldList.length,
-        padding: const EdgeInsets.all(25),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 10,
-        ),
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          final gameBoardField = gameBoardFieldList[index];
-          return ElevatedButton(
-            onPressed: () => gameBoardField.status != Status.empty
-                ? null
-                : ref.read(gameBoardControllerProvider.notifier).setCoinOnGameField(index: index),
-            style: ElevatedButton.styleFrom(
-              primary: gameBoardField.status == Status.empty
-                  ? Colors.grey
-                  : gameBoardField.player == Player.player1
-                      ? Colors.blue
-                      : Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
+      body: Column(
+        children: [
+          const SizedBox(height: 30),
+          Text(
+            'Player 1 vs Player 2',
+            style: theme.textTheme.headline1?.copyWith(fontSize: 40),
+          ),
+          const SizedBox(height: 10),
+          GridView.builder(
+            itemCount: gameBoardFieldList.length,
+            padding: const EdgeInsets.all(25),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 10,
             ),
-            child: Container(),
-          );
-        },
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final gameBoardField = gameBoardFieldList[index];
+              return ElevatedButton(
+                onPressed: () => gameBoardField.status != Status.empty
+                    ? null
+                    : ref.read(gameBoardControllerProvider.notifier).setCoinOnGameField(index: index),
+                style: ElevatedButton.styleFrom(
+                  primary: gameBoardField.status == Status.empty
+                      ? Colors.grey
+                      : gameBoardField.player == Player.player1
+                          ? Colors.blue
+                          : Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+                child: Container(),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
