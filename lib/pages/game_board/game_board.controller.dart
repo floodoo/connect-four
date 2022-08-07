@@ -64,6 +64,12 @@ class GameBoardController extends StateNotifier<GameBoardState> {
     _log.info('$player is now playing');
   }
 
+  void setWinner(bool player1, bool player2) {
+    final Player winner = player1 ? Player.player1 : Player.player2;
+    _log.info('setWinner: $winner');
+    state = state.copyWith(won: true, winner: winner);
+  }
+
   void checkIfSomebodyWon({required int bottomFieldIndex}) {
     _log.info('Checking if somebody won');
     bool player1Won = true;
@@ -85,18 +91,14 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
 
       if (player1Won || player2Won) {
-        if (player1Won) {
-          _log.info('Player 1 won');
-        } else {
-          _log.info('Player 2 won');
-        }
-        state = state.copyWith(won: true);
+        setWinner(player1Won, player2Won);
       }
     }
 
     // check if somebody won on the left side
     player1Won = true;
     player2Won = true;
+
     if (bottomFieldIndex % 7 >= 3) {
       for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 && i >= 0; i--) {
         if (state.gameBoardFieldList[i].status == Status.filled) {
@@ -112,12 +114,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
 
       if (player1Won || player2Won) {
-        if (player1Won) {
-          _log.info('Player 1 won');
-        } else {
-          _log.info('Player 2 won');
-        }
-        state = state.copyWith(won: true);
+        setWinner(player1Won, player2Won);
       }
     }
 
@@ -125,6 +122,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
     if (bottomFieldIndex - 3 * 7 >= 0) {
       player1Won = true;
       player2Won = true;
+
       for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 7 && i >= 0; i -= 7) {
         if (state.gameBoardFieldList[i].status == Status.filled) {
           if (state.gameBoardFieldList[i].player != Player.player1) {
@@ -139,18 +137,14 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
 
       if (player1Won || player2Won) {
-        if (player1Won) {
-          _log.info('Player 1 won');
-        } else {
-          _log.info('Player 2 won');
-        }
-        state = state.copyWith(won: true);
+        setWinner(player1Won, player2Won);
       }
     }
     // check if somebody won from top index to bottom index
     else {
       player1Won = true;
       player2Won = true;
+
       for (int i = bottomFieldIndex;
           i <= bottomFieldIndex + 3 * 7 && i <= state.gameBoardFieldList.length - 1;
           i += 7) {
@@ -167,12 +161,81 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
 
       if (player1Won || player2Won) {
-        if (player1Won) {
-          _log.info('Player 1 won');
+        setWinner(player1Won, player2Won);
+      }
+    }
+
+    // check if somebody won diagonally from bottomFieldIndex to top left corner
+    player1Won = true;
+    player2Won = true;
+    int fieldCounter = 0;
+
+    // count diagonally from bottomFieldIndex to top left corner and max 4 fields
+    for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 8 && i >= 0; i -= 8) {
+      fieldCounter++;
+      if (i % 7 == 0) {
+        break;
+      }
+    }
+
+    // if there are 4 fields, check if they are filled by the same player
+    if (fieldCounter == 4) {
+      for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 8 && i >= 0; i -= 8) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
         } else {
-          _log.info('Player 2 won');
+          player1Won = false;
+          player2Won = false;
         }
-        state = state.copyWith(won: true);
+        if (i % 7 == 0) {
+          break;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        setWinner(player1Won, player2Won);
+      }
+    }
+
+    // check if somebody won diagonally from bottomFieldIndex to bottom right corner
+    player1Won = true;
+    player2Won = true;
+    fieldCounter = 0;
+
+    // count diagonally from bottomFieldIndex to bottom right and max 4 fields
+    for (int i = bottomFieldIndex; i <= bottomFieldIndex + 3 * 8 && i <= state.gameBoardFieldList.length - 1; i += 8) {
+      fieldCounter++;
+      if (i % 7 == 6) {
+        break;
+      }
+    }
+
+    // if there are 4 fields, check if they are filled by the same player
+    if (fieldCounter == 4) {
+      for (int i = bottomFieldIndex;
+          i <= bottomFieldIndex + 3 * 8 && i <= state.gameBoardFieldList.length - 1;
+          i += 8) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
+        } else {
+          player1Won = false;
+          player2Won = false;
+        }
+        if (i % 7 == 6) {
+          break;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        setWinner(player1Won, player2Won);
       }
     }
   }
