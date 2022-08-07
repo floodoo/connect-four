@@ -54,7 +54,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }).toList(),
     );
 
-    checkIfSomebodyWon(bottomFieldIndex: bottomFieldIndex);
+    calculateIfSomebodyWon(bottomFieldIndex: bottomFieldIndex);
 
     if (player == Player.player1) {
       player = Player.player2;
@@ -70,12 +70,12 @@ class GameBoardController extends StateNotifier<GameBoardState> {
     state = state.copyWith(won: true, winner: winner);
   }
 
-  void checkIfSomebodyWon({required int bottomFieldIndex}) {
+  void calculateIfSomebodyWon({required int bottomFieldIndex}) {
     _log.info('Checking if somebody won');
     bool player1Won = true;
     bool player2Won = true;
 
-    // check if somebody won on the right side
+    // check if somebody won from placed coin to right side
     if (bottomFieldIndex % 7 <= 3) {
       for (int i = bottomFieldIndex; i <= bottomFieldIndex + 3 && i <= state.gameBoardFieldList.length - 1; i++) {
         if (state.gameBoardFieldList[i].status == Status.filled) {
@@ -95,7 +95,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // check if somebody won on the left side
+    // check if somebody won from placed coin to left side
     player1Won = true;
     player2Won = true;
 
@@ -118,7 +118,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // check if somebody won from bottom index to top index
+    // check if somebody won from placed coin to top index
     if (bottomFieldIndex - 3 * 7 >= 0) {
       player1Won = true;
       player2Won = true;
@@ -140,7 +140,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
         setWinner(player1Won, player2Won);
       }
     }
-    // check if somebody won from top index to bottom index
+    // check if somebody won from placed coin to bottom index
     else {
       player1Won = true;
       player2Won = true;
@@ -165,12 +165,11 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // check if somebody won diagonally from bottomFieldIndex to top left corner
+    // check if somebody won diagonally from placed coin to top left corner
     player1Won = true;
     player2Won = true;
     int fieldCounter = 0;
 
-    // count diagonally from bottomFieldIndex to top left corner and max 4 fields
     for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 8 && i >= 0; i -= 8) {
       fieldCounter++;
       if (i % 7 == 0) {
@@ -178,7 +177,6 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // if there are 4 fields, check if they are filled by the same player
     if (fieldCounter == 4) {
       for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 8 && i >= 0; i -= 8) {
         if (state.gameBoardFieldList[i].status == Status.filled) {
@@ -201,12 +199,11 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // check if somebody won diagonally from bottomFieldIndex to bottom right corner
+    // check if somebody won diagonally from placed coin to bottom right corner
     player1Won = true;
     player2Won = true;
     fieldCounter = 0;
 
-    // count diagonally from bottomFieldIndex to bottom right and max 4 fields
     for (int i = bottomFieldIndex; i <= bottomFieldIndex + 3 * 8 && i <= state.gameBoardFieldList.length - 1; i += 8) {
       fieldCounter++;
       if (i % 7 == 6) {
@@ -214,7 +211,6 @@ class GameBoardController extends StateNotifier<GameBoardState> {
       }
     }
 
-    // if there are 4 fields, check if they are filled by the same player
     if (fieldCounter == 4) {
       for (int i = bottomFieldIndex;
           i <= bottomFieldIndex + 3 * 8 && i <= state.gameBoardFieldList.length - 1;
@@ -230,6 +226,76 @@ class GameBoardController extends StateNotifier<GameBoardState> {
           player2Won = false;
         }
         if (i % 7 == 6) {
+          break;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        setWinner(player1Won, player2Won);
+      }
+    }
+
+    // check if somebody won diagonally from placed coin to top right corner
+    player1Won = true;
+    player2Won = true;
+    fieldCounter = 0;
+
+    for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 6 && i >= 0; i -= 6) {
+      fieldCounter++;
+      if (i % 7 == 6) {
+        break;
+      }
+    }
+
+    if (fieldCounter == 4) {
+      for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 6 && i >= 0; i -= 6) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
+        } else {
+          player1Won = false;
+          player2Won = false;
+        }
+        if (i % 7 == 6) {
+          break;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        setWinner(player1Won, player2Won);
+      }
+    }
+
+    // check if somebody won diagonally from placed coin to bottom left corner
+    player1Won = true;
+    player2Won = true;
+    fieldCounter = 0;
+
+    for (int i = bottomFieldIndex; i <= bottomFieldIndex + 3 * 6 && i <= state.gameBoardFieldList.length - 1; i += 6) {
+      fieldCounter++;
+      if (i % 7 == 0) {
+        break;
+      }
+    }
+
+    if (fieldCounter == 4) {
+      for (int i = bottomFieldIndex;
+          i <= bottomFieldIndex + 3 * 6 && i <= state.gameBoardFieldList.length - 1;
+          i += 6) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
+        } else {
+          player1Won = false;
+          player2Won = false;
+        }
+        if (i % 7 == 0) {
           break;
         }
       }
