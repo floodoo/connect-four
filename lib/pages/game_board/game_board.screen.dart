@@ -36,11 +36,14 @@ class GameBoard extends ConsumerWidget {
       ),
       body: GridView.builder(
         itemCount: gameBoardFieldList.length,
-        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(25),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 7,
-          crossAxisSpacing: 1,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 10,
         ),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final gameBoardField = gameBoardFieldList[index];
           return ElevatedButton(
@@ -53,11 +56,11 @@ class GameBoard extends ConsumerWidget {
                   : gameBoardField.player == Player.player1
                       ? Colors.blue
                       : Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
             ),
-            child: Text(
-              '$index',
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-            ),
+            child: Container(),
           );
         },
       ),

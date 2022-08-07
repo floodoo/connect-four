@@ -31,28 +31,49 @@ class GameBoardController extends StateNotifier<GameBoardState> {
     state = state.copyWith(gameBoardFieldList: gameBoardFields);
   }
 
-  void setCoinOnGameField({required int index}) {
-    int bottomFieldIndex = index;
-
+  Future<void> setCoinOnGameField({required int index}) async {
     // calculate the index of the bottom field, which is the field with the lowest index that is not empty
+    int bottomFieldIndex = index;
     for (var i = index; i <= state.gameBoardFieldList.length - 1; i += 7) {
       if (state.gameBoardFieldList[i].status == Status.empty) {
         bottomFieldIndex = i;
       }
     }
 
-    final gameBoardField = state.gameBoardFieldList[bottomFieldIndex];
-    final newGameBoardField = gameBoardField.copyWith(status: Status.filled, player: player);
+    // calculate the index of the top field, which is the field with the highest index that is not empty
+    int topFieldIndex = index;
+    for (var i = index; i >= 0; i -= 7) {
+      if (state.gameBoardFieldList[i].status == Status.empty) {
+        topFieldIndex = i;
+      }
+    }
 
-    // replace the old field with the new field
-    state = state.copyWith(
-      gameBoardFieldList: state.gameBoardFieldList.map((field) {
-        if (field.index == bottomFieldIndex) {
+    // drop coin animation
+    for (int i = topFieldIndex; i <= bottomFieldIndex; i += 7) {
+      final gameBoardField = state.gameBoardFieldList[i];
+      final newGameBoardField = gameBoardField.copyWith(status: Status.filled, player: player);
+      state = state.copyWith(
+          gameBoardFieldList: state.gameBoardFieldList.map((field) {
+        if (field.index == i) {
           return newGameBoardField;
         }
         return field;
-      }).toList(),
-    );
+      }).toList());
+
+      await Future.delayed(const Duration(milliseconds: 250));
+
+      // remove coin if it is not at the bottom field
+      if (i != bottomFieldIndex) {
+        final newGameBoardField2 = gameBoardField.copyWith(status: Status.empty, player: null);
+        state = state.copyWith(
+            gameBoardFieldList: state.gameBoardFieldList.map((field) {
+          if (field.index == i) {
+            return newGameBoardField2;
+          }
+          return field;
+        }).toList());
+      }
+    }
 
     calculateIfSomebodyWon(bottomFieldIndex: bottomFieldIndex);
 
