@@ -32,6 +32,7 @@ class GameBoardController extends StateNotifier<GameBoardState> {
   }
 
   Future<void> setCoinOnGameField({required int index}) async {
+    state = state.copyWith(moves: state.moves + 1);
     // calculate the index of the bottom field, which is the field with the lowest index that is not empty
     int bottomFieldIndex = index;
     for (var i = index; i <= state.gameBoardFieldList.length - 1; i += 7) {

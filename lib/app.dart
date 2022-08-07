@@ -1,5 +1,6 @@
 import 'package:connect_four/pages/game_board/game_board.screen.dart';
 import 'package:connect_four/pages/main_menu/main_menu.screen.dart';
+import 'package:connect_four/pages/win_menu/win_menu.screen.dart';
 import 'package:connect_four/theme/connect_four.theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,12 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: 'play',
             builder: (context, state) => const GameBoard(key: Key('game board')),
+            routes: [
+              GoRoute(
+                path: 'win',
+                builder: (context, state) => const WinMenuScreen(key: Key('win menu')),
+              ),
+            ],
           ),
         ],
       ),

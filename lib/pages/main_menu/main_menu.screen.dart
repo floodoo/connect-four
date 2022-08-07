@@ -1,15 +1,42 @@
 import 'package:connect_four/core/changeNotifier/change_notifier.dart';
+import 'package:connect_four/utils/lifecycle_event_handler.dart';
+import 'package:connect_four/utils/logger.util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class MainMenuScreen extends ConsumerWidget {
+class MainMenuScreen extends ConsumerStatefulWidget {
   const MainMenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends ConsumerState<MainMenuScreen> {
+  final _log = LoggerUtil(name: "main_menu.screen.dart").logger;
+
+  @override
+  void initState() {
+    ref.read(audioControllerProvider).playMusic();
+    WidgetsBinding.instance.addObserver(
+      LifecycleEventHandler(
+        resumeCallBack: () async {
+          _log.info("App has resumed");
+          ref.read(audioControllerProvider).resumeMusic();
+        },
+        pauseCallBack: () async {
+          _log.info("App has paused");
+          ref.read(audioControllerProvider).pauseMusic();
+        },
+      ),
+    );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    ref.read(audioController).playMusic();
 
     return Scaffold(
       body: Center(
@@ -20,7 +47,7 @@ class MainMenuScreen extends ConsumerWidget {
             Transform.rotate(
               angle: -0.1,
               child: Text(
-                'Connect Four',
+                "Connect Four",
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headline1,
               ),

@@ -18,7 +18,7 @@ class GameBoard extends ConsumerWidget {
 
     if (won) {
       Future.delayed(Duration.zero, () {
-        GoRouter.of(context).go('/');
+        GoRouter.of(context).go('/play/win');
       });
     }
 

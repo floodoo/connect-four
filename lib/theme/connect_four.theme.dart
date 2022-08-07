@@ -42,6 +42,13 @@ class ConnectFourTheme {
         ),
         headline6: TextStyle(fontWeight: FontWeight.bold, color: isLight ? Colors.black : Colors.white),
       ),
+      buttonTheme: theme.buttonTheme.copyWith(
+        buttonColor: color,
+        textTheme: ButtonTextTheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
     );
   }
 }

@@ -11,5 +11,6 @@ class GameBoardState with _$GameBoardState {
     @Default(Player.player1) Player player,
     @Default(false) bool won,
     Player? winner,
+    @Default(0) int moves,
   }) = _GameBoardState;
 }
