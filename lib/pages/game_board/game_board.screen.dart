@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:four_wins/enums/game_board_field.enum.dart';
 import 'package:four_wins/enums/player.enum.dart';
 import 'package:four_wins/pages/game_board/game_board.controller.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 
 class GameBoard extends ConsumerWidget {
@@ -11,7 +12,15 @@ class GameBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gameBoard = ref.watch(gameBoardControllerProvider);
+    final gameBoardFieldList = ref.watch(gameBoardControllerProvider).gameBoardFieldList;
+
+    final won = ref.watch(gameBoardControllerProvider).won;
+
+    if (won) {
+      Future.delayed(Duration.zero, () {
+        GoRouter.of(context).go('/');
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -26,14 +35,14 @@ class GameBoard extends ConsumerWidget {
         ],
       ),
       body: GridView.builder(
-        itemCount: gameBoard.length,
+        itemCount: gameBoardFieldList.length,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 7,
           crossAxisSpacing: 1,
         ),
         itemBuilder: (context, index) {
-          final gameBoardField = gameBoard[index];
+          final gameBoardField = gameBoardFieldList[index];
           return ElevatedButton(
             onPressed: () => gameBoardField.status != Status.empty
                 ? null

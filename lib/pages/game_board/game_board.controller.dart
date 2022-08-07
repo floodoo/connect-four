@@ -1,17 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:four_wins/enums/game_board_field.enum.dart';
 import 'package:four_wins/enums/player.enum.dart';
-import 'package:four_wins/models/game_board_field.model.dart';
+import 'package:four_wins/models/game_board_field.dart';
+import 'package:four_wins/pages/game_board/game_board.state.dart';
 import 'package:four_wins/utils/logger.util.dart';
 
-final gameBoardControllerProvider = StateNotifierProvider.autoDispose<PlaceController, List<GameBoardFieldModel>>(
+final gameBoardControllerProvider = StateNotifierProvider.autoDispose<GameBoardController, GameBoardState>(
   (ref) {
-    return PlaceController();
+    return GameBoardController();
   },
 );
 
-class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
-  PlaceController() : super([]) {
+class GameBoardController extends StateNotifier<GameBoardState> {
+  GameBoardController() : super(GameBoardState()) {
     buildGameBoard();
   }
 
@@ -20,41 +21,40 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
 
   void buildGameBoard() async {
     _log.info('Building game board');
-    final gameBoardFields = List<GameBoardFieldModel>.generate(
+    final gameBoardFields = List<GameBoardField>.generate(
       42,
-      (index) => GameBoardFieldModel(
+      (index) => GameBoardField(
         index: index,
         status: Status.empty,
       ),
     );
-    state = gameBoardFields;
+    state = state.copyWith(gameBoardFieldList: gameBoardFields);
   }
 
   void setCoinOnGameField({required int index}) {
-    _log.fine('Setting coin on game field $index');
     int bottomFieldIndex = index;
 
     // calculate the index of the bottom field, which is the field with the lowest index that is not empty
-    for (var i = index; i <= state.length - 1; i += 7) {
-      if (state[i].status == Status.empty) {
+    for (var i = index; i <= state.gameBoardFieldList.length - 1; i += 7) {
+      if (state.gameBoardFieldList[i].status == Status.empty) {
         bottomFieldIndex = i;
       }
     }
 
-    _log.fine('Setting coin on index: $bottomFieldIndex');
-    final gameBoardField = state[bottomFieldIndex];
+    final gameBoardField = state.gameBoardFieldList[bottomFieldIndex];
     final newGameBoardField = gameBoardField.copyWith(status: Status.filled, player: player);
 
     // replace the old field with the new field
-    state = state.map((gameBoardField) {
-      if (gameBoardField.index == bottomFieldIndex) {
-        return newGameBoardField;
-      }
-      return gameBoardField;
-    }).toList();
+    state = state.copyWith(
+      gameBoardFieldList: state.gameBoardFieldList.map((field) {
+        if (field.index == bottomFieldIndex) {
+          return newGameBoardField;
+        }
+        return field;
+      }).toList(),
+    );
 
-    final somebodyWon = checkIfSomebodyWon(index: bottomFieldIndex);
-    if (somebodyWon) {}
+    checkIfSomebodyWon(bottomFieldIndex: bottomFieldIndex);
 
     if (player == Player.player1) {
       player = Player.player2;
@@ -64,16 +64,16 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
     _log.info('$player is now playing');
   }
 
-  bool checkIfSomebodyWon({required int index}) {
-    _log.fine('Checking if somebody won');
+  void checkIfSomebodyWon({required int bottomFieldIndex}) {
+    _log.info('Checking if somebody won');
     bool player1Won = true;
     bool player2Won = true;
 
     // check if somebody won on the right side
-    if (index % 7 <= 3) {
-      for (int i = index; i <= index + 3 && i <= state.length - 1; i++) {
-        if (state[i].status == Status.filled) {
-          if (state[i].player != Player.player1) {
+    if (bottomFieldIndex % 7 <= 3) {
+      for (int i = bottomFieldIndex; i <= bottomFieldIndex + 3 && i <= state.gameBoardFieldList.length - 1; i++) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
             player1Won = false;
           } else {
             player2Won = false;
@@ -90,15 +90,17 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
         } else {
           _log.info('Player 2 won');
         }
-        return true;
+        state = state.copyWith(won: true);
       }
     }
 
     // check if somebody won on the left side
-    if (index % 7 >= 3) {
-      for (int i = index; i >= index - 3 && i >= 0; i--) {
-        if (state[i].status == Status.filled) {
-          if (state[i].player != Player.player1) {
+    player1Won = true;
+    player2Won = true;
+    if (bottomFieldIndex % 7 >= 3) {
+      for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 && i >= 0; i--) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
             player1Won = false;
           } else {
             player2Won = false;
@@ -115,10 +117,63 @@ class PlaceController extends StateNotifier<List<GameBoardFieldModel>> {
         } else {
           _log.info('Player 2 won');
         }
-        return true;
+        state = state.copyWith(won: true);
       }
     }
 
-    return false;
+    // check if somebody won from bottom index to top index
+    if (bottomFieldIndex - 3 * 7 >= 0) {
+      player1Won = true;
+      player2Won = true;
+      for (int i = bottomFieldIndex; i >= bottomFieldIndex - 3 * 7 && i >= 0; i -= 7) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
+        } else {
+          player1Won = false;
+          player2Won = false;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        if (player1Won) {
+          _log.info('Player 1 won');
+        } else {
+          _log.info('Player 2 won');
+        }
+        state = state.copyWith(won: true);
+      }
+    }
+    // check if somebody won from top index to bottom index
+    else {
+      player1Won = true;
+      player2Won = true;
+      for (int i = bottomFieldIndex;
+          i <= bottomFieldIndex + 3 * 7 && i <= state.gameBoardFieldList.length - 1;
+          i += 7) {
+        if (state.gameBoardFieldList[i].status == Status.filled) {
+          if (state.gameBoardFieldList[i].player != Player.player1) {
+            player1Won = false;
+          } else {
+            player2Won = false;
+          }
+        } else {
+          player1Won = false;
+          player2Won = false;
+        }
+      }
+
+      if (player1Won || player2Won) {
+        if (player1Won) {
+          _log.info('Player 1 won');
+        } else {
+          _log.info('Player 2 won');
+        }
+        state = state.copyWith(won: true);
+      }
+    }
   }
 }
