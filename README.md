@@ -1,5 +1,5 @@
 # connect_four
-Own challenge: Programm a connect four prototype in under 24 Hours coding time
+Own challenge: Programm a connect four prototype with under 24 Hours coding time
 
 
 <img width="399" alt="Bildschirmfoto 2022-09-19 um 22 18 38" src="https://user-images.githubusercontent.com/59688267/191109062-48c9278e-af7d-49b6-a718-02bc636d9927.png">
